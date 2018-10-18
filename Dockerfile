@@ -8,7 +8,7 @@ RUN apt update && \
 
 FROM base AS binutils
 
-ARG BINUTILS_VERSION=2.31.1
+ARG BINUTILS_VERSION
 
 RUN wget http://ftp.gnu.org/gnu/binutils/binutils-${BINUTILS_VERSION}.tar.xz && \
     tar -xJf binutils-${BINUTILS_VERSION}.tar.xz && \
@@ -16,7 +16,7 @@ RUN wget http://ftp.gnu.org/gnu/binutils/binutils-${BINUTILS_VERSION}.tar.xz && 
 
 FROM base AS gcc
 
-ARG GCC_VERSION=8.2.0
+ARG GCC_VERSION
 
 RUN wget ftp://ftp.lip6.fr/pub/gcc/releases/gcc-${GCC_VERSION}/gcc-${GCC_VERSION}.tar.xz && \
     tar -xJf gcc-${GCC_VERSION}.tar.xz && \
@@ -40,8 +40,10 @@ RUN apt update && \
         libisl-0.18-dev \
         file
 
+ARG BUILD_TARGET
+
 ENV PREFIX="/opt/cross" \
-    TARGET=i686-elf
+    TARGET=${BUILD_TARGET}
 
 ENV PATH="$PREFIX/bin:$PATH"
 
@@ -61,8 +63,10 @@ RUN ../gcc/configure --target=$TARGET --prefix="$PREFIX" --disable-nls --enable-
 
 FROM base
 
+ARG BUILD_TARGET
+
 ENV PREFIX="/opt/cross" \
-    TARGET=i686-elf
+    TARGET=${BUILD_TARGET}
 
 ENV PATH="$PREFIX/bin:$PATH"
 
